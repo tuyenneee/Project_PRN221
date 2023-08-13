@@ -1,0 +1,184 @@
+﻿@page
+@using WebRazor.Models 
+@model WebRazor.Pages.ChatModel
+@{
+    List<Account> users = Model.users;
+    Account currentUser = Model.user;
+    Account toUser = Model.toUser;
+    Layout = "_Layout";
+}
+
+<div class="h-screen w-full flex antialiased text-gray-800 bg-white overflow-hidden">
+    <div class="flex-1 flex flex-col">
+        <div class="border-b-2 p-2 flex flex-row z-20 justify-content-center">
+            <h1 style="font-size: 25px">Welcome @currentUser.Email</h1>
+        </div>
+        <a href="/Index">Back To List</a>
+        <main class="flex-grow flex flex-row min-h-0">
+            <section class="flex flex-col flex-none overflow-auto w-24 lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out">
+                <div class="header p-4 flex flex-row justify-between items-center flex-none">
+                    <div class="w-16 h-16 relative flex flex-shrink-0">
+                    </div>
+                    <p class="text-md font-bold hidden md:block">Messenger</p>
+                    <span data-bs-toggle="modal" data-bs-target="#NewMess" class="block rounded-full hover:bg-gray-200 bg-gray-100 w-10 h-10 p-2" style="cursor: pointer">
+                        <svg viewBox="0 0 24 24" class="w-full h-full">
+                            <path d="M6.3 12.3l10-10a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1 0 1.4l-10 10a1 1 0 0 1-.7.3H7a1 1 0 0 1-1-1v-4a1 1 0 0 1 .3-.7zM8 16h2.59l9-9L17 4.41l-9 9V16zm10-2a1 1 0 0 1 2 0v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6c0-1.1.9-2 2-2h6a1 1 0 0 1 0 2H4v14h14v-6z" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="search-box p-4 flex-none">
+                    <form onsubmit="">
+                        <div class="relative">
+                            <label>
+                                <input class="rounded-full py-2 pr-6 pl-10 w-full border border-gray-200 bg-gray-200 focus:bg-white focus:outline-none text-gray-600 focus:shadow-md transition duration-300 ease-in"
+                                       type="text" value="" placeholder="Search Messenger" />
+                                <span class="absolute top-0 left-0 mt-2 ml-3 inline-block">
+                                    <svg viewBox="0 0 24 24" class="w-6 h-6">
+                                        <path fill="#bbb"
+                                              d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z" />
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="active-users flex flex-row p-2 overflow-auto w-0 min-w-full">
+                    @foreach (Account u in users)
+                    {
+                        <div class="text-sm text-center mr-4">
+                            <a href="./Chat?toUserId=@u.AccountId">
+                                <div class="p-1 border-4 border-blue-600 rounded-full">
+                                    <div class="w-16 h-16 relative flex flex-shrink-0">
+                                        <img class="shadow-md rounded-full w-full h-full object-cover"
+                                         src="/Image/user.png"
+                                         alt="" />
+                                    </div>
+                                </div><p>@u.Email</p>
+                            </a>
+                        </div>
+                    }
+                </div>
+                @Html.Partial("_ChatHistory", Model)
+            </section>
+            @if (toUser != null)
+            {
+                @Html.Partial("_ChatScreen", Model)
+            }
+        </main>
+    </div>
+
+</div>
+
+<div class="modal fade" id="CreateGroup" tabindex="-1" aria-labelledby="CreateGroup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create new group</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="CreateGroup">
+                    <label>Name Group</label>
+                    <input name="name" value="" class="form-control" />
+                    <input name="idCurrentUser" value="@currentUser.AccountId" class="form-control" style="display: none" />
+                    @foreach (Account u in users)
+                    {
+                        <div class="d-flex">
+                            <input class="form-check" type="checkbox" name="users" value="@u.AccountId" />
+                            <span>@u.Email</span>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="NewMess" tabindex="-1" aria-labelledby="NewMess" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create new message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="CreateNewMess">
+                    <label>Message</label>
+                    <input name="message" value="" class="form-control" />
+                    <input name="idCurrentUser" value="@currentUser.AccountId" class="form-control" style="display: none" />
+
+                    @foreach (Account u in users)
+                    {
+                        <div class="d-flex">
+                            <input class="form-check" type="checkbox" name="users" value="@u.AccountId" />
+                            <span>@u.Email</span>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    /* can be configured in tailwind.config.js */
+    .group:hover .group-hover\:block {
+        display: block;
+    }
+
+    .hover\:w-64:hover {
+        width: 45%;
+    }
+    /* NO NEED THIS CSS - just for custom scrollbar which can also be configured in tailwind.config.js*/
+    ::-webkit-scrollbar {
+        width: 2px;
+        height: 2px;
+    }
+
+    ::-webkit-scrollbar-button {
+        width: 0px;
+        height: 0px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #2d3748;
+        border: 0px none #ffffff;
+        border-radius: 50px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2b6cb0;
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            background: #000000;
+        }
+
+    ::-webkit-scrollbar-track {
+        background: #1a202c;
+        border: 0px none #ffffff;
+        border-radius: 50px;
+    }
+
+        ::-webkit-scrollbar-track:hover {
+            background: #666666;
+        }
+
+        ::-webkit-scrollbar-track:active {
+            background: #333333;
+        }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+</style>

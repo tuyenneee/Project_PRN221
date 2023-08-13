@@ -1,0 +1,80 @@
+﻿@page
+@model WebRazor.Pages.Admin.Product.SupplierModel
+@{
+}
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="content-main">
+    <div id="content-main-dashboard">
+        <div id="product-title-header" style="padding-bottom: 50px;">
+            <div id="product-title-1" style="width: 25%;">
+                <a href="~/Admin/Product/Create">Create a new Product</a>
+                <br>
+                <a href="~/Admin/Product">Back To List</a><br>
+
+            </div>
+            <div id="product-title-2" style="width: 55%;">
+                <form method="post" enctype="multipart/form-data" asp-page-handler="Import">
+                    <div class="form-group">
+                        <input type="file" name="file" class="form-control" accept=".xlx,.xlsc" />
+                        <button type="submit"> Import file excel</button>
+                    </div>
+                </form>
+                   
+              
+               
+            </div>
+
+         
+        </div>
+        <div id="order-table-admin">
+            <table id="orders">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity Per Unit </th>
+                    <th>Unit Price</th>
+                    <th>UnitsInStock</th>
+                    <th>UnitsOnOrder</th>
+                    <th>ReorderLevel</th>
+
+                    <th></th>
+                </tr>
+                <tbody id="tableBody">
+
+                    @foreach (var item in Model.Product)
+                    {
+                        <tr>
+                            @*<td>
+                        <a href="order-detail.html?id=@item.ProductId">@Html.DisplayFor(modelItem => item.ProductId)</a>
+                        </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.QuantityPerUnit)
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.UnitPrice)</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UnitsInStock)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UnitsOnOrder)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReorderLevel)
+                            </td>
+
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            @*<form method="post" enctype="multipart/form-data" asp-page-handler="Request">
+                <div class="form-group">
+                    <button type="submit">Send request</button>
+                </div>
+            </form>*@
+        </div>

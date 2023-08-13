@@ -1,0 +1,62 @@
+﻿@model ChatModel
+@using WebRazor.Models;
+@{
+    Account toUser = Model.toUser;
+    Account user = Model.user;
+    List<Chat> messagesUser = Model.historyMessageBetweenUser;
+}
+
+<section class="flex flex-col flex-auto border-l">
+    <div class="chat-header px-6 py-4 flex flex-row flex-none justify-between items-center shadow">
+        <div class="flex">
+            <div class="w-12 h-12 mr-4 relative flex flex-shrink-0">
+                <img class="shadow-md rounded-full w-full h-full object-cover"
+                     src="/Image/user.png"
+                     alt="" />
+            </div>
+            <div class="text-sm">
+                <p class="font-bold">@toUser.Email</p>
+            </div>
+        </div>
+    </div>
+    <div class="chat-body p-4 flex-1 overflow-y-scroll">
+        @foreach (Chat m in messagesUser)
+        {
+            if (m.FromUser == user.AccountId)
+            {
+                <div class="flex flex-row justify-end my-3">
+                    <div class="messages text-sm text-white grid grid-flow-row gap-2">
+                        <div class="flex items-center flex-row-reverse group">
+                            <p class="px-6 py-3 rounded-t-full rounded-l-full bg-blue-500 max-w-xs lg:max-w-md">@m.Message</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="flex items-center group my-3">
+                    <p class="px-6 py-3 rounded-b-full rounded-r-full bg-gray-100 max-w-xs lg:max-w-md">@m.Message</p>
+                </div>
+            }
+        }
+    </div>
+    <div class="chat-footer flex-none">
+        <div class="flex flex-row items-center p-4">
+
+            <div class="relative flex-grow">
+                <form method="post" asp-page-handler="SendMessage">
+                    <label style="width: 90%">
+                        <input name="message" class="rounded-full py-2 pl-3 pr-10 w-full border border-gray-200 bg-gray-200 focus:bg-white focus:outline-none text-gray-600 focus:shadow-md transition duration-300 ease-in"
+                               type="text" value="" placeholder="Aa" />
+                    </label>
+                    <input name="idCurrentUser" value="@user.AccountId" style="display: none" />
+                    <input name="toUserId" value="@toUser.AccountId" style="display: none" />
+
+                    <button type="submit">Send</button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,83 @@
+﻿@page
+@model WebRazor.Pages.Order.IndexModel
+@{
+}
+<div id="content-left">
+    
+    <h3>Account Management</h3>
+    <ul>
+        <a href="~/Account/Profile">
+        <li>Personal information</li></a>
+    </ul>
+    <h3>My order</h3>
+    <ul>
+        <a href="~/Order">
+        <li>All orders</li></a>
+    </ul>
+</div>
+<div id="content-right">
+    <div class="path">LIST ORDERS</b></div>
+    <div class="content-main">
+        <div id="profile-content-order">
+            @foreach (var order in Model.Auth.Customer.Orders)
+            {
+                <div>
+                    <div class="profile-order-title">
+                        <div class="profile-order-title-left">
+                            <div>Order creation date: @order.OrderDate</div>
+                            <div>Order: <a href="#">#@order.OrderId</a></div>
+                        </div>
+                    </div>
+                    @foreach (var item in order.OrderDetails)
+                    {
+                        <div class="profile-order-content">
+                            <div class="profile-order-content-col1">
+                                <a href="~/Product/Detail/@item.ProductId"><img src="~/img/1.jpg" width="100%" /></a>
+                            </div>
+                            <div class="profile-order-content-col2">@item.Product.ProductName</div>
+                            <div class="profile-order-content-col3">Quantity: @item.Quantity</div>
+                            <div class="profile-order-content-col4">@item.UnitPrice $</div>
+                            @if (item.Discount == 0)
+                            {
+                                <a href="~/Order/Buy?quantity=@item.Quantity&&productid=@item.ProductId&&orderid=@item.OrderId" class="btn2"> OK </a>
+                                <div class="profile-order-title-right">
+                                    <span>Pending</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="color:cornflowerblue; font-weight:bold">
+                                    <span>Complete</span>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+                                    <style>
+                                        
+        .btn2
+
+    {
+        background-color: #4CAF50; 
+        color: white; 
+        border: none; 
+        padding: 10px 20px; 
+        margin-left: 100px;
+        text-align: center; 
+        text-decoration: none; /* Remove underline */
+        display: inline-block; /* Set display to inline-block */
+        font-size: 16px; /* Set font size */
+        border-radius: 5px; /* Add rounded corners */
+        transition-duration: 0.4s; /* Add transition effect */
+    }
+
+    
+                                        
+                                    </style>
